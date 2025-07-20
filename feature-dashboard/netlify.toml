@@ -1,0 +1,4 @@
+[build]
+  base    = "feature-dashboard"
+  command = "npm run build"
+  publish = "dist" # or "build" for CRA
