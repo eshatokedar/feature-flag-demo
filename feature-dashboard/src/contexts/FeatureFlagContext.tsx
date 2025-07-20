@@ -24,10 +24,10 @@ const FeatureFlagContext = createContext<FeatureFlagContextType | undefined>(und
 
 // Convert API format to internal format
 const convertAPIFlagToInternal = (apiFlag: APIFeatureFlag): FeatureFlag => ({
-  id: apiFlag.name, // Use name as ID for consistency
+  id: apiFlag.id.toString(), // Convert numeric ID to string
   name: apiFlag.name,
   enabled: apiFlag.enabled,
-  description: apiFlag.description
+  description: apiFlag.description || `Feature flag for ${apiFlag.name}` // Provide default description
 });
 
 export function FeatureFlagProvider({ children }: { children: ReactNode }) {
@@ -56,22 +56,19 @@ export function FeatureFlagProvider({ children }: { children: ReactNode }) {
     fetchFlags();
   }, []);
 
-  const toggleFlag = async (name: string) => {
+  const toggleFlag = async (id: string) => {
     try {
-      const flag = flags.find(f => f.name === name);
+      const flag = flags.find(f => f.id === id);
       if (!flag) return;
 
-      // Find the API flag to get the correct ID
-      const apiFlags = await featureFlagAPI.getAllFlags();
-      const apiFlag = apiFlags.find(f => f.name === name);
-      if (!apiFlag) return;
-
-      await featureFlagAPI.toggleFlag(apiFlag.id, !flag.enabled);
+      // Convert string ID back to number for API call
+      const numericId = parseInt(id);
+      await featureFlagAPI.toggleFlag(numericId, !flag.enabled);
       
       // Update local state immediately for better UX
       setFlags(prevFlags => 
         prevFlags.map(f => 
-          f.name === name ? { ...f, enabled: !f.enabled } : f
+          f.id === id ? { ...f, enabled: !f.enabled } : f
         )
       );
     } catch (err) {

@@ -1,5 +1,6 @@
 // API service for feature flags
-const API_BASE_URL = 'http://localhost:3000';
+
+const API_BASE_URL = 'https://feature-flag-bd79.onrender.com';
 
 export interface FeatureFlag {
   id: number;
@@ -17,9 +18,17 @@ export interface FeatureFlagUpdate {
 }
 
 class FeatureFlagAPI {
+  private getHeaders(): Record<string, string> {
+    return {
+      'Content-Type': 'application/json'
+    };
+  }
+
   async getAllFlags(): Promise<FeatureFlag[]> {
     try {
-      const response = await fetch(`${API_BASE_URL}/flags`);
+      const response = await fetch(`${API_BASE_URL}/flags`, {
+        headers: this.getHeaders()
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch flags');
       }
@@ -34,9 +43,7 @@ class FeatureFlagAPI {
     try {
       const response = await fetch(`${API_BASE_URL}/flags/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: this.getHeaders(),
         body: JSON.stringify({ enabled }),
       });
       
@@ -55,9 +62,7 @@ class FeatureFlagAPI {
     try {
       const response = await fetch(`${API_BASE_URL}/flags/bulk/update`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: this.getHeaders(),
         body: JSON.stringify({ flags }),
       });
       
@@ -76,9 +81,7 @@ class FeatureFlagAPI {
     try {
       const response = await fetch(`${API_BASE_URL}/flags/initialize`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: this.getHeaders(),
       });
       
       if (!response.ok) {

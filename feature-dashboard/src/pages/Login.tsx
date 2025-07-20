@@ -1,46 +1,65 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { Settings, ArrowRight } from 'lucide-react';
 
-export default function LoginPage() {
+const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    // Simple hardcoded auth check — replace with real auth later
-    if (username === 'admin@123' && password === 'admin@123') {
-      localStorage.setItem('auth', 'true');
-      navigate('/dashboard');
-    } else {
-      alert('Invalid credentials');
-    }
+  const handleNavigateToDashboard = () => {
+    navigate('/dashboard');
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-md rounded-lg p-8 w-80">
-        <h2 className="text-2xl font-semibold mb-4 text-center">Admin Login</h2>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          className="w-full mb-3 px-4 py-2 border rounded"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          className="w-full mb-3 px-4 py-2 border rounded"
-        />
-        <button
-          onClick={handleLogin}
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-        >
-          Login
-        </button>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4">
+      <div className="max-w-md w-full">
+        {/* Logo and Title */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="p-3 bg-indigo-600 rounded-xl">
+              <Settings className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              Feature Flags
+            </h1>
+          </div>
+          <p className="text-gray-600">
+            Manage your application's feature flags with ease
+          </p>
+        </div>
+
+        {/* Simple Access Card */}
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+              Welcome Back
+            </h2>
+            <p className="text-gray-600">
+              Access your feature flag dashboard
+            </p>
+          </div>
+
+          <button
+            onClick={handleNavigateToDashboard}
+            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
+          >
+            Go to Dashboard
+            <ArrowRight className="w-5 h-5" />
+          </button>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-500">
+              Click above to access the feature flag management dashboard
+            </p>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="text-center mt-8 text-sm text-gray-500">
+          <p>Feature Flag Management System</p>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default Login;
